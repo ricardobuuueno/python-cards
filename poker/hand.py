@@ -1,3 +1,11 @@
+from poker.validators import (
+    ThreeOfAKindValidator,
+    TwoPairValidator,
+    PairValidator,
+    HighCardValidator, 
+    NoCardsValidator
+)
+
 class Hand():
     def __init__(self):
         self.cards = []
@@ -21,11 +29,11 @@ class Hand():
             ("Full House", self._full_house),
             ("Flush", self._flush),
             ("Straight", self._straight),
-            ("Three of a Kind", self._three_of_a_kind),
-            ("Two Pair", self._two_pair),
-            ("Pair", self._pair),
-            ("High Card", self._high_card),
-            ("No Cards", self._no_cards)
+            ("Three of a Kind", ThreeOfAKindValidator(cards = self.cards).is_valid),
+            ("Two Pair", TwoPairValidator(cards = self.cards).is_valid),
+            ("Pair", PairValidator(cards = self.cards).is_valid),
+            ("High Card", HighCardValidator(cards = self.cards).is_valid),
+            ("No Cards", NoCardsValidator(cards = self.cards).is_valid)
         )
 
     def best_rank(self):
@@ -50,7 +58,7 @@ class Hand():
         return len(ranks_with_four_of_a_kind) == 1
 
     def _full_house(self):
-        return self._three_of_a_kind() and self._pair()
+        return ThreeOfAKindValidator(cards = self.cards).is_valid() and PairValidator(cards = self.cards).is_valid()
 
     def _flush(self):
         suit_that_occurs_5_or_more_times = {
@@ -63,24 +71,6 @@ class Hand():
     def _straight(self):
         rank_idxs = [card.rank_index for card in self.cards]
         return len(rank_idxs) == 5 and rank_idxs == list(range(rank_idxs[0], rank_idxs[-1] + 1))
-
-    def _three_of_a_kind(self):
-        ranks_with_three_of_a_kind = self._ranks_with_count(3)
-        return len(ranks_with_three_of_a_kind) == 1
-
-    def _two_pair(self):
-        ranks_with_pairs = self._ranks_with_count(2)
-        return len(ranks_with_pairs) == 2
-
-    def _pair(self):
-        ranks_with_pairs = self._ranks_with_count(2)
-        return len(ranks_with_pairs) == 1
-
-    def _high_card(self):
-        return len(self.cards) >= 2
-
-    def _no_cards(self):
-        return len(self.cards) == 0
 
     def _ranks_with_count(self, count):
         return {

@@ -83,20 +83,22 @@ class CardTest(unittest.TestCase):
         ace_of_clubs = Card(rank = "Ace", suit = "Clubs")
 
         unsorted_cards = [
+            five_of_hearts,
             five_of_diamonds,
             two_of_spades,
-            five_of_hearts,
             ace_of_clubs,
             eight_of_hearts
         ]
 
+        unsorted_cards.sort()
+
         self.assertEqual(
             unsorted_cards,
             [
-                five_of_diamonds,
                 two_of_spades,
+                five_of_diamonds,
                 five_of_hearts,
-                ace_of_clubs,
-                eight_of_hearts
+                eight_of_hearts,
+                ace_of_clubs
             ]
         )
